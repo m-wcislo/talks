@@ -1,0 +1,21 @@
+ingress:
+  enabled: true
+  hosts:
+    - mygrafana.<your.cluster.domain>
+  tls:
+    - hosts:
+        - mygrafana.<your.cluster.domain>
+      secretName: tls
+
+grafana.ini:
+  users:
+    allow_sign_up: true
+    auto_assign_org: true
+    auto_assign_org_role: Editor
+
+  auth.proxy:
+    enabled: true
+    header_name: x-auth-request-email
+    header_property: email
+    auto_sign_up: true
+

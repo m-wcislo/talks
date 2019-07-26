@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$request_uri"
+    nginx.ingress.kubernetes.io/auth-response-headers: "x-auth-request-user, x-auth-request-email"
+  name: external-auth-oauth2-grafana
+  namespace: default
+spec:
+  rules:
+  - host: mygrafana-secure.<your.cluster.domain>
+    http:
+      paths:
+      - backend:
+          serviceName: mygrafana 
+          servicePort: 80
+        path: /
+  tls:
+  - hosts:
+    - mygrafana-secure.<your.cluster.domain>
+    secretName: tls
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: oauth2-proxy-grafana
+  namespace: default
+spec:
+  rules:
+  - host: mygrafana-secure.<your.cluster.domain>
+    http:
+      paths:
+      - backend:
+          serviceName: oauth2-proxy
+          servicePort: 4180
+        path: /oauth2
+  tls:
+  - hosts:
+    - mygrafana-secure.<your.cluster.domain>
+    secretName: tls

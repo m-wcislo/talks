@@ -1,0 +1,48 @@
+authenticatedEmailsFile:
+  enabled: true
+  restricted_access: |
+    example@email.com
+
+extraArgs:
+  set-xauthrequest:
+  set-authorization-header:
+  oidc-issuer-url: https://keycloak.<your.cluster.domain>/auth/realms/master
+  cookie-secure: false
+  provider: oidc
+  ssl-insecure-skip-verify:
+config:
+  clientID: sso
+  clientSecret: 5ab0bbb5-51d0-4fd9-bf3b-9a3963497e75
+  cookieSecret: RkfkCk2jrsmAXDTLKm7zsLIXt1JCFIjcclPUnXjYP5w
+  configFile: |
+    upstreams = [ "file:///dev/null" ]
+image:
+  repository: "quay.io/pusher/oauth2_proxy"
+  tag: "v3.1.0"
+  pullPolicy: "IfNotPresent"
+service:
+  type: ClusterIP
+  # when service.type is ClusterIP ...
+  # clusterIP: 192.0.2.20
+  # when service.type is LoadBalancer ...
+  # loadBalancerIP: 198.51.100.40
+  # loadBalancerSourceRanges: 203.0.113.0/24
+  port: 4180
+  annotations: {}
+ingress:
+  enabled: false
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 0
+  timeoutSeconds: 1
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 0
+  timeoutSeconds: 1
+  periodSeconds: 10
+  successThreshold: 1
+
+podAnnotations: {}
+podLabels: {}
+replicaCount: 1

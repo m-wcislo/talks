@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: keycloak-http
+  namespace: iam
+spec:
+  rules:
+  - host: keycloak-http.<your.cluster.domain>
+    http:
+      paths:
+      - backend:
+          serviceName: keycloak-http
+          servicePort: 80
+        path: /

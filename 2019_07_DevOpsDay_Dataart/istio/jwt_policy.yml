@@ -1,0 +1,13 @@
+apiVersion: authentication.istio.io/v1alpha1
+kind: Policy
+metadata:
+  name: productpage-default
+  namespace: default
+spec:
+  targets:
+  - name: productpage
+  origins:
+  - jwt:
+      issuer: "https://keycloak.<your.cluster.domain>/auth/realms/master"
+      jwksUri: "https://keycloak.<your.cluster.domain>/auth/realms/master/protocol/openid-connect/certs"
+  principalBinding: USE_ORIGIN

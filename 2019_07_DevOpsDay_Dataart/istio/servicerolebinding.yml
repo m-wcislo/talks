@@ -1,0 +1,12 @@
+apiVersion: "rbac.istio.io/v1alpha1"
+kind: ServiceRoleBinding
+metadata:
+  name: admin-user-binding
+  namespace: default
+spec:
+  subjects:
+  - properties:
+      request.auth.claims[email]: "<your.email>"
+  roleRef:
+    kind: ServiceRole
+    name: "admin-user" 
