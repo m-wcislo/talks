@@ -1,0 +1,71 @@
+---
+# this is an example chart, showing the general structure of a catalog file
+service:
+  _id: d3920b2c-7caa-4795-b1f9-c985bb80b77d
+  _name: grafana
+  description: "Grafana"
+  chart: stable/grafana
+  chart-version: 3.8.11
+  plans:
+  -
+    _id: 22d09b31-3a6c-488c-b75b-ea1b764b2c42
+    _name: free
+    description: "Free tier"
+    metadata:
+      displayName: "Free tier"
+    schemas:
+      service-instance:
+        create:
+          parameters:
+            $schema: "http://json-schema.org/draft-07/schema#"
+            type: object
+            properties:
+              name:
+                title: "Instance name"
+                description: "Instance name that will become part of dn"
+                type: string
+    chart-values:
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+  -
+    _id: 22d09b31-3a6c-488c-b75b-ea1b764b2c43
+    _name: small
+    description: "Small flavour"
+    metadata:
+      displayName: "Small flavour"
+    schemas:
+      service-instance:
+        create:
+          parameters:
+            $schema: "http://json-schema.org/draft-07/schema#"
+            type: object
+            properties:
+              name:
+                title: "Instance name"
+                description: "Instance name that will become part of dn"
+                type: string
+    chart-values:
+      resources:
+        limits:
+          cpu: 2000m
+          memory: 2048Mi
+        requests:
+          cpu: 1000m
+          memory: 1280Mi
+---
+chart-values:
+  adminPassword: {{ randAlphaNum 32 | b64enc | quote }}
+  ingress:
+    enabled: true
+    hosts: 
+      - "{{ .Parameters.name }}.<your cluster base dn>"
+---
+user-credentials:
+  endpoint: "http://{{ index .Values.ingress.hosts 0 }}/"
+  adminUser: {{ .Values.adminUser }}
+  adminPassword: {{ .Values.adminPassword }}
